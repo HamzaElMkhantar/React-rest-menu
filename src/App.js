@@ -1,25 +1,56 @@
-import logo from './logo.svg';
-import './App.css';
+import {Container} from 'react-bootstrap'
+import { NavBar } from './components/NavBar';
+import { Header } from './components/Header';
+import { Category } from './components/Category';
+import { ItemsList } from './components/ItemsList';
+import items from './data'
+import { useState } from 'react';
 
-function App() {
+function App(){
+
+  const [ dataItems , setDataItems ] = useState(items) ;
+
+  const allCategory = [ "All" , ...new Set( items.map(item => item.category) ) ]
+  
+
+  const fitreByCategory = (cat) => {
+
+    if( cat === "All" ){
+      setDataItems( items )
+    }else {
+
+      const newArr = items.filter( (item) => item.category === cat ) 
+      setDataItems( newArr )
+    }
+
+  }
+
+  const fitreBySearch = (word) => {
+
+    if(word !== ""){
+      const newArr = items.filter( (item) => item.title === word ) 
+      setDataItems( newArr )
+
+    }
+
+  }
+
+
+
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+           <NavBar fitreBySearch={fitreBySearch} />
+        <Container>
+           <Header />
+           <Category fitreByCategory={fitreByCategory}
+                     allCategory={allCategory} />
+           
+           <ItemsList dataItems={dataItems} />
+
+        </Container>
     </div>
   );
 }
 
-export default App;
+export default App ;
